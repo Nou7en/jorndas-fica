@@ -131,7 +131,7 @@ export default function ListaEstudiantes() {
       <div className="flex mb-4">
         <input
           type="text"
-          placeholder="Buscar por ID Banner"
+          placeholder="Buscar por Cedula"
           value={idBanner}
           onChange={(e) => setIdBanner(e.target.value)}
           className="border p-2 flex-grow"
@@ -151,7 +151,7 @@ export default function ListaEstudiantes() {
       {estudianteFiltrado ? (
         <div key={estudianteFiltrado.id_estudiante} className="border-b p-4">
           <p>Nombre: {estudianteFiltrado.nombre}</p>
-          <p>ID Banner: {estudianteFiltrado.id_banner}</p>
+          <p>Cedula: {estudianteFiltrado.id_banner}</p>
           <p>Carrera: {estudianteFiltrado.carrera}</p>
           <p>
             Wristband Number:{" "}
@@ -210,7 +210,7 @@ export default function ListaEstudiantes() {
             <thead className="bg-gray-100">
               <tr>
                 <th className="px-4 py-2">Nombre</th>
-                <th className="px-4 py-2">ID Banner</th>
+                <th className="px-4 py-2">Cedula</th>
                 <th className="px-4 py-2">Carrera</th>
                 <th className="px-4 py-2">Wristband Number</th>
                 <th className="px-4 py-2">Maleta Entregada</th>
