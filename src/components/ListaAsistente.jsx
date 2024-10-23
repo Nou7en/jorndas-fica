@@ -20,7 +20,7 @@ export default function ListaAsistente() {
 
       console.log("Datos de la API en el frontend:", data); // Depuración
 
-      setAsistentes(data);
+      setAsistentes(data.reverse());
     } catch (error) {
       console.error("Error obteniendo asistentes:", error);
     }

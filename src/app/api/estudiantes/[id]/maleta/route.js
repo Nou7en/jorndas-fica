@@ -5,20 +5,34 @@ export async function PATCH(req, { params }) {
   try {
     const { id } = params; // Obtener id_estudiante de los parámetros de la URL
     const body = await req.json(); // Parsear el cuerpo de la solicitud
-    const { maleta } = body; // Desestructurar el valor de maleta
+    const { maleta, refrigerio } = body; // Desestructurar el valor de maleta y refrigerio
 
-    // Actualizar la columna maleta en la base de datos para el estudiante con el id proporcionado
-    const query =
-      "UPDATE Estudiantes SET maleta_entregada = ? WHERE id_estudiante = ?";
-    const values = [maleta, id];
+    // Construir la consulta SQL dinámicamente en función de los campos enviados
+    let query = "UPDATE Estudiantes SET";
+    const values = [];
 
+    if (maleta !== undefined) {
+      query += " maleta_entregada = ?";
+      values.push(maleta);
+    }
+
+    if (refrigerio !== undefined) {
+      if (values.length > 0) query += ",";
+      query += " refrigerio_entregado = ?";
+      values.push(refrigerio);
+    }
+
+    query += " WHERE id_estudiante = ?";
+    values.push(id);
+
+    // Ejecutar la consulta con los valores proporcionados
     await conn.query(query, values);
 
-    return NextResponse.json({ message: "Maleta entregada exitosamente" });
+    return NextResponse.json({ message: "Actualización exitosa" });
   } catch (error) {
-    console.error("Error entregando maleta:", error);
+    console.error("Error actualizando estudiante:", error);
     return NextResponse.json(
-      { error: "Error entregando maleta" },
+      { error: "Error actualizando estudiante" },
       { status: 500 }
     );
   }

@@ -117,6 +117,31 @@ export default function ListaEstudiantes() {
     }
   };
 
+  // Función para registrar la entrega de refrigerio
+  const entregarRefrigerio = async (idEstudiante) => {
+    try {
+      const res = await fetch(`/api/estudiantes/${idEstudiante}/maleta`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ refrigerio: true }), // Debe ser un valor booleano
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setMessage("Refrigerio entregado exitosamente");
+        fetchEstudiantes(); // Refrescar la lista de estudiantes
+      } else {
+        setMessage(data.message || "Error entregando refrigerio");
+      }
+    } catch (error) {
+      console.error("Error entregando refrigerio:", error);
+      setMessage("Error en el servidor");
+    }
+  };
+
   // Función para volver a ver la lista completa de estudiantes
   const volverLista = () => {
     setEstudianteFiltrado(null);
@@ -161,6 +186,10 @@ export default function ListaEstudiantes() {
             Maleta Entregada:{" "}
             {estudianteFiltrado.maleta_entregada ? "Sí" : "No"}
           </p>
+          <p>
+            Refrigerio Entregado:{" "}
+            {estudianteFiltrado.refrigerio_entregado ? "Sí" : "No"}
+          </p>
 
           <div className="mt-4">
             <button
@@ -170,7 +199,7 @@ export default function ListaEstudiantes() {
               Asignar Wristband
             </button>
 
-            {/* Opción 1: Desactivar botón */}
+            {/* Botón de Entregar Maleta */}
             <button
               onClick={() => entregarMaleta(estudianteFiltrado.id_estudiante)}
               className={`bg-green-500 text-white p-2 rounded hover:bg-green-600 ${
@@ -183,17 +212,20 @@ export default function ListaEstudiantes() {
               Entregar Maleta
             </button>
 
-            {/* Opción 2: Ocultar botón */}
-            {/* 
-            {!estudianteFiltrado.maleta_entregada && (
-              <button
-                onClick={() => entregarMaleta(estudianteFiltrado.id_estudiante)}
-                className="bg-green-500 text-white p-2 rounded hover:bg-green-600"
-              >
-                Entregar Maleta
-              </button>
-            )}
-            */}
+            {/* Botón de Entregar Refrigerio */}
+            <button
+              onClick={() =>
+                entregarRefrigerio(estudianteFiltrado.id_estudiante)
+              }
+              className={`bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600 ${
+                estudianteFiltrado.refrigerio_entregado
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
+              }`}
+              disabled={estudianteFiltrado.refrigerio_entregado}
+            >
+              Entregar Refrigerio
+            </button>
 
             <button
               onClick={volverLista}
@@ -214,6 +246,7 @@ export default function ListaEstudiantes() {
                 <th className="px-4 py-2">Carrera</th>
                 <th className="px-4 py-2">Wristband Number</th>
                 <th className="px-4 py-2">Maleta Entregada</th>
+                <th className="px-4 py-2">Refrigerio Entregado</th>
                 <th className="px-4 py-2">Acción</th>
               </tr>
             </thead>
@@ -230,6 +263,9 @@ export default function ListaEstudiantes() {
                     {estudiante.maleta_entregada ? "Sí" : "No"}
                   </td>
                   <td className="px-4 py-2">
+                    {estudiante.refrigerio_entregado ? "Sí" : "No"}
+                  </td>
+                  <td className="px-4 py-2">
                     <button
                       onClick={() => abrirModalAsignar(estudiante)}
                       className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 mr-2"
@@ -237,7 +273,6 @@ export default function ListaEstudiantes() {
                       Asignar Wristband
                     </button>
 
-                    {/* Opción 1: Desactivar botón */}
                     <button
                       onClick={() => entregarMaleta(estudiante.id_estudiante)}
                       className={`bg-green-500 text-white p-2 rounded hover:bg-green-600 ${
@@ -250,17 +285,19 @@ export default function ListaEstudiantes() {
                       Entregar Maleta
                     </button>
 
-                    {/* Opción 2: Ocultar botón */}
-                    {/* 
-                    {!estudiante.maleta_entregada && (
-                      <button
-                        onClick={() => entregarMaleta(estudiante.id_estudiante)}
-                        className="bg-green-500 text-white p-2 rounded hover:bg-green-600"
-                      >
-                        Entregar Maleta
-                      </button>
-                    )}
-                    */}
+                    <button
+                      onClick={() =>
+                        entregarRefrigerio(estudiante.id_estudiante)
+                      }
+                      className={`bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600 ${
+                        estudiante.refrigerio_entregado
+                          ? "opacity-50 cursor-not-allowed"
+                          : ""
+                      }`}
+                      disabled={estudiante.refrigerio_entregado}
+                    >
+                      Entregar Refrigerio
+                    </button>
                   </td>
                 </tr>
               ))}
